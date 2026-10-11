@@ -38,6 +38,28 @@ Se o documento do dia passar de ~200 KB, as tentativas seguintes vão para `AAAA
 `entrada` vale `teclado`, `colado` ou `ditado provável` (estimado pelo tamanho do maior trecho
 inserido de uma vez; o navegador não informa se o texto veio do ditado).
 
+## Áudio gravado com voz de IA
+
+A página toca o áudio gravado quando o documento da frase tem `audioUrl` (ou `audioId`). Sem
+ele, usa a voz do aparelho. "Devagar" toca o mesmo arquivo a 75% da velocidade.
+
+O áudio sai do Gemini (Google AI Studio), porque o claude.ai não deixa a página chamar um serviço de
+voz enquanto roda. Ele precisa ser gerado antes e guardado na página.
+
+1. Chave: a variável de ambiente `GEMINI_API_KEY` do ambiente da sessão (cadastrada nas
+   configurações do ambiente, nunca colada no chat). A chave só entra em sessões novas.
+2. Amostras: `node espanhol/audio/gerar-audio.mjs espanhol/frases-seed.json --ids a1-001,a2-005,b1-038 --vozes Kore,Charon --saida /tmp/amostras`.
+   Enviar os MP3 para a pessoa ouvir e escolher a voz.
+3. Todas as frases: exportar `frases` com `ArtifactData` (`query`, `limit` 1000, `out_dir`), e rodar
+   `node espanhol/audio/gerar-audio.mjs <pasta-exportada>/frases --vozes <voz escolhida>`.
+   Os arquivos vão para `espanhol/audio/out/` (fora do git) com um `manifest.json`.
+4. Subir os MP3 como assets da página (`Artifact`, `asset: true`, até 25 arquivos por chamada).
+5. Gravar `audioId` e `audioUrl` (exatamente como o upload devolveu) em cada documento de
+   `frases`, com `ArtifactData` `batch` e `op: "update"`.
+
+Frases novas criadas na aba "Mais frases" ficam sem áudio gravado até repetir os passos 3 a 5
+para elas (o programa pula as que já têm arquivo em `out/`).
+
 ## Para o Claude, nas próximas conversas
 
 - Ler o registro: `ArtifactData` `query` em `tentativas` (ordenar por `dia`) e em `progresso`.

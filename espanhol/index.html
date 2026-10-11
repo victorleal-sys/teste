@@ -729,8 +729,38 @@ select, input[type="text"], input[type="search"] {
     const cands = voz.lista.filter((x) => rank(x) < 99).sort((a, b) => rank(a) - rank(b) || (b.localService === true) - (a.localService === true));
     return cands[0] || null;
   }
+  // Áudio gravado com voz de IA (campo audioId/audioUrl da frase). Sem ele, a voz do aparelho.
+  const gravado = { atual: null };
+  function urlAudio(f) {
+    if (!f) return '';
+    if (typeof f.audioUrl === 'string' && f.audioUrl) return f.audioUrl;
+    if (typeof f.audioId === 'string' && /^[0-9a-f]{32}$/.test(f.audioId)) return '/_blob/' + f.audioId;
+    return '';
+  }
+  const podeOuvir = (f) => voz.suportada || !!urlAudio(f);
+  function pararGravado() {
+    try { if (gravado.atual) gravado.atual.pause(); } catch { /* ok */ }
+  }
+  function ouvirES(f, lento) {
+    const url = urlAudio(f);
+    if (!url) { falar(f.es, 'es', lento); return; }
+    try { if (voz.suportada) window.speechSynthesis.cancel(); } catch { /* ok */ }
+    pararGravado();
+    try {
+      const a = new Audio(url);
+      const taxa = lento ? 0.75 : 1;
+      a.defaultPlaybackRate = taxa;
+      a.playbackRate = taxa;
+      a.preservesPitch = true;
+      gravado.atual = a;
+      a.play().catch(() => falar(f.es, 'es', lento));
+    } catch {
+      falar(f.es, 'es', lento);
+    }
+  }
   function falar(texto, idioma, lento) {
     if (!voz.suportada) return;
+    pararGravado();
     try {
       const s = window.speechSynthesis;
       const ocupado = s.speaking || s.pending;
@@ -743,7 +773,8 @@ select, input[type="text"], input[type="search"] {
       else s.speak(u);
     } catch { /* sem áudio */ }
   }
-  function notaVoz() {
+  function notaVoz(f) {
+    if (urlAudio(f)) return 'Áudio gravado com voz de IA, sotaque latino-americano.';
     if (!voz.suportada) return 'Este navegador não tem leitura em voz alta.';
     const v = escolherVoz('es');
     if (!v) return 'Nenhuma voz em espanhol encontrada neste aparelho. Instale o espanhol nas configurações de voz do sistema.';
@@ -756,7 +787,7 @@ select, input[type="text"], input[type="search"] {
   }
   function atualizarNotaVoz() {
     const n = $('#voiceNote');
-    if (n) n.textContent = notaVoz();
+    if (n) n.textContent = notaVoz(state.card && state.card.frase);
   }
 
   // ---------- Banner ----------
@@ -1145,11 +1176,11 @@ select, input[type="text"], input[type="search"] {
       }, a.rot)));
 
     const audio = h('div', { class: 'audio' },
-      h('button', { class: 'btn primary', id: 'btnES', onclick: () => { c.ouviuES++; falar(f.es, 'es', false); }, disabled: !voz.suportada },
+      h('button', { class: 'btn primary', id: 'btnES', onclick: () => { c.ouviuES++; ouvirES(f, false); }, disabled: !podeOuvir(f) },
         h('span', { html: ICON.play }), 'Ouvir em espanhol'),
-      h('button', { class: 'btn', id: 'btnESlento', onclick: () => { c.ouviuES++; falar(f.es, 'es', true); }, disabled: !voz.suportada },
+      h('button', { class: 'btn', id: 'btnESlento', onclick: () => { c.ouviuES++; ouvirES(f, true); }, disabled: !podeOuvir(f) },
         h('span', { html: ICON.slow }), 'Devagar'),
-      h('p', { class: 'voice-note', id: 'voiceNote' }, notaVoz()));
+      h('p', { class: 'voice-note', id: 'voiceNote' }, notaVoz(f)));
 
     const card = h('article', { class: 'card', id: 'card' },
       h('div', { class: 'card-progress', 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(((pos - 1) / Math.max(1, total)) * 100)}%` })),
@@ -1227,7 +1258,7 @@ select, input[type="text"], input[type="search"] {
       h('p', { class: 'correct', lang: 'es-AR' }, 'Frase: ', h('b', null, c.frase.es)),
       c.frase.nota ? h('p', { class: 'nota' }, h('b', null, 'Nota'), c.frase.nota) : null,
       h('div', { class: 'row end' },
-        h('button', { class: 'btn', onclick: () => { c.ouviuES++; falar(c.frase.es, 'es', false); }, disabled: !voz.suportada }, h('span', { html: ICON.play }), 'Ouvir'),
+        h('button', { class: 'btn', onclick: () => { c.ouviuES++; ouvirES(c.frase, false); }, disabled: !podeOuvir(c.frase) }, h('span', { html: ICON.play }), 'Ouvir'),
         h('span', { class: 'spacer' }),
         h('button', { class: 'btn', onclick: repetir }, 'Repetir'),
         h('button', { class: 'btn primary', id: 'btnNext', onclick: proxima }, state.idx + 1 >= state.fila.length ? 'Concluir' : 'Próxima')));
@@ -1584,7 +1615,7 @@ select, input[type="text"], input[type="search"] {
         const est = !p ? h('span', { class: 'chip new' }, 'nova') : p.caixa >= DOMINADA ? h('span', { class: 'chip master' }, 'dominada') : h('span', { class: 'chip' }, `caixa ${p.caixa}`);
         return h('li', null,
           h('p', { class: 'es', lang: 'es-AR' }, f.es),
-          h('div', { class: 'side' }, est, h('button', { class: 'icon-btn', 'aria-label': `Ouvir: ${f.es}`, onclick: () => falar(f.es, 'es', false), disabled: !voz.suportada }, h('span', { html: ICON.play }))),
+          h('div', { class: 'side' }, est, h('button', { class: 'icon-btn', 'aria-label': `Ouvir: ${f.es}`, onclick: () => ouvirES(f, false), disabled: !podeOuvir(f) }, h('span', { html: ICON.play }))),
           h('p', { class: 'pt2', lang: 'pt-BR' }, f.pt));
       }));
       if (!fs.length) lista.replaceChildren(h('li', null, h('p', { class: 'muted' }, state.frases.size ? 'Nenhuma frase encontrada.' : 'Este nível ainda não tem frases.')));
