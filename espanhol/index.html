@@ -1,0 +1,1683 @@
+<title>Hablá Rioplatense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: uma coluna estreita, como uma plataforma de subte: a placa preta de rua no topo,
+   as linhas (níveis) como insígnias coloridas e um único cartão de trabalho por vez. */
+:root {
+  --bg: #F2F4F7;
+  --surface: #FFFFFF;
+  --surface-2: #F7F9FB;
+  --ink: #141B24;
+  --ink-2: #485465;
+  --ink-3: #7A8596;
+  --line: #D8DEE6;
+  --accent: #1A5BAA;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E2ECF8;
+  --ok: #17734A;
+  --ok-soft: #E1F2E9;
+  --warn: #8F5A00;
+  --warn-soft: #FBEFD6;
+  --err: #B3361F;
+  --err-soft: #F9E3DE;
+  --sign: #11161D;
+  --sign-ink: #F5F7FA;
+  --l-a1: #18A0D6;
+  --l-a2: #E2231A;
+  --l-b1: #1E5BA8;
+  --l-b2: #00915A;
+  --l-c1: #6D3F97;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius: 14px;
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.5rem;
+  --step-3: 1.9rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1218;
+    --surface: #161D26;
+    --surface-2: #1B2430;
+    --ink: #E7ECF2;
+    --ink-2: #AAB5C3;
+    --ink-3: #7C8899;
+    --line: #2B3644;
+    --accent: #82B4F0;
+    --accent-ink: #0D1218;
+    --accent-soft: #1B2B3F;
+    --ok: #62C793;
+    --ok-soft: #14291E;
+    --warn: #E4B556;
+    --warn-soft: #2D2413;
+    --err: #F2907C;
+    --err-soft: #331B17;
+    --sign: #04070A;
+    --sign-ink: #F5F7FA;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1218;
+  --surface: #161D26;
+  --surface-2: #1B2430;
+  --ink: #E7ECF2;
+  --ink-2: #AAB5C3;
+  --ink-3: #7C8899;
+  --line: #2B3644;
+  --accent: #82B4F0;
+  --accent-ink: #0D1218;
+  --accent-soft: #1B2B3F;
+  --ok: #62C793;
+  --ok-soft: #14291E;
+  --warn: #E4B556;
+  --warn-soft: #2D2413;
+  --err: #F2907C;
+  --err-soft: #331B17;
+  --sign: #04070A;
+  --sign-ink: #F5F7FA;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  padding-inline: 16px;
+  padding-block: 0 48px;
+}
+.app { max-width: 720px; margin-inline: auto; display: flex; flex-direction: column; gap: 18px; }
+button, select, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Placa de rua */
+.sign {
+  margin-top: 16px;
+  background: var(--sign);
+  color: var(--sign-ink);
+  border-radius: 6px;
+  padding: 10px 16px 9px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: inset 0 0 0 2px var(--sign), inset 0 0 0 3px rgba(245, 247, 250, 0.35);
+}
+.sign-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+}
+.sign-sub {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab {
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 8px 12px 9px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* Linhas = níveis */
+.lines { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lines-label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-right: 2px;
+}
+.line-badge {
+  --c: var(--l-a1);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--c);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  display: inline-grid;
+  place-items: center;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 3px transparent;
+  transition: box-shadow 0.15s, transform 0.15s;
+  flex: none;
+}
+.line-badge.small { width: 32px; height: 32px; font-size: 0.95rem; }
+.line-badge[data-n="A1"] { --c: var(--l-a1); color: #08202B; }
+.line-badge[data-n="A2"] { --c: var(--l-a2); }
+.line-badge[data-n="B1"] { --c: var(--l-b1); }
+.line-badge[data-n="B2"] { --c: var(--l-b2); }
+.line-badge[data-n="C1"] { --c: var(--l-c1); }
+button.line-badge[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
+button.line-badge:hover { transform: translateY(-1px); }
+
+.banner {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.banner p { margin: 0; min-width: 0; flex: 1 1 260px; }
+.banner.warn { border-color: var(--warn); background: var(--warn-soft); }
+
+/* Botões */
+.btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.quiet { background: transparent; border-color: transparent; color: var(--ink-2); }
+.btn.quiet:hover { color: var(--ink); border-color: var(--line); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row.end { justify-content: flex-end; }
+.spacer { flex: 1; }
+
+/* Cartão */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.card-progress { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.card-progress > span { display: block; height: 100%; background: var(--accent); width: 0; transition: width 0.25s; }
+.meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: var(--step--1); color: var(--ink-2); }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: var(--step--1);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.chip.new { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.chip.master { border-color: var(--ok); color: var(--ok); background: var(--ok-soft); }
+.meta .count { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+.label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 4px;
+}
+.pt-row { display: flex; gap: 12px; align-items: flex-start; }
+.pt { font-size: var(--step-2); line-height: 1.3; margin: 0; flex: 1; min-width: 0; text-wrap: balance; }
+.icon-btn {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 999px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  flex: none;
+}
+.icon-btn svg { width: 18px; height: 18px; }
+.icon-btn:hover { border-color: var(--ink-3); }
+
+.audio { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.voice-note { font-size: var(--step--1); color: var(--ink-3); margin: 0; flex-basis: 100%; }
+
+.field {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.15s;
+}
+.field:focus-within { border-color: var(--accent); }
+.guide {
+  font-size: var(--step-2);
+  line-height: 1.45;
+  color: var(--ink-3);
+  word-spacing: 0.08em;
+  min-height: 1.45em;
+  overflow-wrap: anywhere;
+}
+.guide .w { transition: color 0.12s; }
+.guide .w.done { color: var(--ok); }
+.guide .w.cur { color: var(--ink); text-decoration: underline 2px var(--accent); text-underline-offset: 6px; }
+.guide .mask {
+  color: transparent;
+  text-decoration: underline dotted 2px var(--ink-3);
+  text-underline-offset: 6px;
+}
+.guide .w.done .mask { color: inherit; text-decoration: none; }
+.guide .empty { font-size: var(--step-0); color: var(--ink-3); font-style: italic; }
+textarea#answer {
+  width: 100%;
+  border: 0;
+  border-top: 1px dashed var(--line);
+  background: transparent;
+  padding: 10px 0 2px;
+  font-size: var(--step-2);
+  line-height: 1.35;
+  resize: none;
+  color: var(--ink);
+  outline: none;
+  min-height: 2.6em;
+}
+textarea#answer::placeholder { color: var(--ink-3); font-size: var(--step-1); }
+textarea#answer[readonly] { color: var(--ink-2); }
+.field-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.seg button {
+  border: 0;
+  background: none;
+  padding: 6px 12px;
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  min-height: 36px;
+}
+.seg button[aria-checked="true"] { background: var(--ink); color: var(--surface); font-weight: 700; }
+.tip { font-size: var(--step--1); color: var(--ink-3); margin: 0; }
+
+.result { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+.verdict { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.verdict strong {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.verdict .pct { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.verdict.certo strong { color: var(--ok); }
+.verdict.quase strong { color: var(--warn); }
+.verdict.errado strong { color: var(--err); }
+.diff { font-size: var(--step-1); line-height: 2; margin: 0; overflow-wrap: anywhere; }
+.diff span { padding: 2px 4px; border-radius: 5px; margin-right: 2px; }
+.d-ok { background: var(--ok-soft); color: var(--ok); }
+.d-acento { background: var(--warn-soft); color: var(--warn); text-decoration: underline dotted 2px; text-underline-offset: 4px; }
+.d-troca { background: var(--err-soft); color: var(--err); }
+.d-troca del, .d-sobra del { opacity: 0.75; margin-right: 4px; }
+.d-troca ins { text-decoration: none; font-weight: 700; }
+.d-falta { border: 1.5px dashed var(--err); color: var(--err); font-weight: 700; }
+.d-sobra { background: var(--err-soft); color: var(--err); }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.8rem; color: var(--ink-3); }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; }
+.correct { margin: 0; font-size: var(--step-1); }
+.correct b { font-weight: 700; }
+.nota { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-size: var(--step-0); }
+.nota b { font-family: var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.85rem; color: var(--accent); margin-right: 6px; }
+
+.empty-state { padding: 26px 20px; text-align: left; display: flex; flex-direction: column; gap: 12px; }
+.empty-state h2 { font-family: var(--font-display); font-size: var(--step-3); margin: 0; letter-spacing: 0.02em; text-wrap: balance; }
+.empty-state p { margin: 0; color: var(--ink-2); max-width: 60ch; }
+
+/* Painel */
+h2.sec {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 8px 0 0;
+}
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+.tile .num { font-family: var(--font-display); font-weight: 700; font-size: 2.2rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.tile .cap { font-size: var(--step--1); color: var(--ink-2); }
+.levels { display: flex; flex-direction: column; gap: 12px; }
+.lvl-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: center; }
+.lvl-row .meter { grid-column: 2; }
+.lvl-row .txt { grid-column: 2; font-size: var(--step--1); color: var(--ink-2); }
+.lvl-row .line-badge { grid-row: span 2; }
+.meter { height: 10px; background: var(--line); border-radius: 5px; overflow: hidden; display: flex; gap: 2px; }
+.meter span { display: block; height: 100%; border-radius: 5px; }
+.meter .m-dom { background: var(--accent); }
+.meter .m-rev { background: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.key { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.8rem; color: var(--ink-3); }
+.key span { display: inline-flex; gap: 6px; align-items: center; }
+.key i { width: 14px; height: 10px; border-radius: 3px; display: inline-block; }
+.days { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.days th, .days td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: var(--step--1); }
+.days th { color: var(--ink-3); font-weight: 400; }
+.days td:first-child, .days th { white-space: nowrap; }
+.days td.bar { width: 50%; }
+.days .b { height: 8px; border-radius: 4px; background: var(--accent); min-width: 2px; }
+.days td.num { text-align: right; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips .chip b { font-variant-numeric: tabular-nums; color: var(--err); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.form-row { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 180px; }
+.form-row label { font-size: var(--step--1); color: var(--ink-2); }
+select, input[type="text"], input[type="search"] {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 9px 10px;
+  min-height: 44px;
+  width: 100%;
+  min-width: 0;
+}
+.muted { color: var(--ink-3); font-size: var(--step--1); margin: 0; }
+
+/* Mais frases */
+.gen-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.gen-list li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+.gen-list .es { font-weight: 700; margin: 0; }
+.gen-list .pt2 { margin: 0; color: var(--ink-2); font-size: var(--step--1); }
+.gen-list .nt { margin: 4px 0 0; color: var(--ink-3); font-size: 0.82rem; }
+.gen-list input[type="checkbox"] { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent); }
+.bank { list-style: none; margin: 0; padding: 0; }
+.bank li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 10px 2px; border-bottom: 1px solid var(--line); align-items: center; }
+.bank .es { font-weight: 700; margin: 0; }
+.bank .pt2 { margin: 0; color: var(--ink-2); font-size: var(--step--1); }
+.bank .side { display: flex; gap: 6px; align-items: center; grid-row: span 2; grid-column: 2; }
+.thinking { display: flex; gap: 10px; align-items: center; color: var(--ink-2); }
+.dot-pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .dot-pulse { animation: none; } * { transition: none !important; } }
+
+.status { font-size: 0.8rem; color: var(--ink-3); min-height: 1.2em; }
+.status.err { color: var(--err); }
+.kbd { font-size: 0.8rem; color: var(--ink-3); margin: 0; }
+@media (max-width: 480px) {
+  .card { padding: 14px; }
+  .pt { font-size: var(--step-1); }
+  .guide, textarea#answer { font-size: var(--step-1); }
+  .sign-name { font-size: 1.7rem; }
+  .kbd { display: none; }
+}
+</style>
+
+<div class="app">
+  <header class="sign" aria-label="Hablá Rioplatense">
+    <p class="sign-name">Hablá</p>
+    <span class="sign-sub">castellano rioplatense</span>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Seções">
+    <button class="tab" role="tab" id="tab-btn-treinar" aria-controls="tab-treinar" aria-selected="true" data-tab="treinar">Treinar</button>
+    <button class="tab" role="tab" id="tab-btn-painel" aria-controls="tab-painel" aria-selected="false" data-tab="painel">Painel</button>
+    <button class="tab" role="tab" id="tab-btn-mais" aria-controls="tab-mais" aria-selected="false" data-tab="mais">Mais frases</button>
+  </nav>
+
+  <div class="lines" id="levelBar" aria-label="Nível">
+    <span class="lines-label">Nível</span>
+  </div>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <main>
+    <section id="tab-treinar" role="tabpanel" aria-labelledby="tab-btn-treinar"></section>
+    <section id="tab-painel" role="tabpanel" aria-labelledby="tab-btn-painel" hidden></section>
+    <section id="tab-mais" role="tabpanel" aria-labelledby="tab-btn-mais" hidden></section>
+  </main>
+
+  <p class="status" id="saveStatus" aria-live="polite"></p>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------- Constantes ----------
+  const NIVEIS = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const NIVEL_DESC = {
+    A1: 'iniciante: presente do indicativo, apresentações, compras, rotina simples',
+    A2: 'básico: pretérito simples e imperfeito, planos com "ir a", imperativo com voseo, situações do dia a dia',
+    B1: 'intermediário: opiniões, subjuntivo presente, por e para, pronomes combinados, viagens e trabalho',
+    B2: 'intermediário superior: hipóteses, imperfeito do subjuntivo, condicional, nuances e falsos amigos',
+    C1: 'avançado: expressões idiomáticas argentinas, registro formal, conectores complexos'
+  };
+  const TEMAS = ['cotidiano', 'conversa', 'trabalho', 'viagem', 'restaurante', 'compras', 'casa', 'saúde', 'opinião', 'expressões', 'falsos amigos', 'gramática', 'formal'];
+  const INTERVALO_DIAS = { 1: 1, 2: 3, 3: 7, 4: 16, 5: 35 };
+  const DOMINADA = 4;
+  const DIA_MS = 86400000;
+  const LIMITE_DOC = 200000;
+  const APOIOS = [
+    { id: 'inteira', rot: 'Frase inteira' },
+    { id: 'iniciais', rot: 'Iniciais' },
+    { id: 'nenhuma', rot: 'Sem ajuda' }
+  ];
+  const APOIO_ORDEM = { inteira: 0, iniciais: 1, nenhuma: 2 };
+
+  const ICON = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    slow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>'
+  };
+
+  // ---------- Utilidades ----------
+  const $ = (s, root = document) => root.querySelector(s);
+  function h(tag, attrs, ...kids) {
+    const n = document.createElement(tag);
+    if (attrs) {
+      for (const [k, v] of Object.entries(attrs)) {
+        if (v === undefined || v === null || v === false) continue;
+        if (k === 'class') n.className = v;
+        else if (k === 'html') n.innerHTML = v;
+        else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+        else if (v === true) n.setAttribute(k, '');
+        else n.setAttribute(k, String(v));
+      }
+    }
+    for (const k of kids.flat()) {
+      if (k === null || k === undefined || k === false) continue;
+      n.append(k instanceof Node ? k : document.createTextNode(String(k)));
+    }
+    return n;
+  }
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const diaLocal = (d = new Date()) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+  const inicioDoDia = (t) => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
+  const pct = (x) => `${Math.round(x * 100)}%`;
+  const DIAS_SEM = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  function rotuloDia(dia) {
+    const [y, m, d] = dia.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    return `${DIAS_SEM[dt.getDay()]} ${pad2(d)}/${pad2(m)}`;
+  }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch { /* sem armazenamento */ } }
+
+  // ---------- Correção ----------
+  const PONT = /[¿?¡!.,;:"“”«»()\[\]…—–\-]/g;
+  const semPont = (s) => s.replace(PONT, ' ').replace(/\s+/g, ' ').trim();
+  const semAcento = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const palavrasOrig = (s) => { const t = semPont(s); return t ? t.split(' ') : []; };
+  const chave = (w) => semAcento(w.toLowerCase());
+
+  function alinhar(exp, got) {
+    const n = exp.length, m = got.length;
+    const d = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+    for (let i = 0; i <= n; i++) d[i][0] = i;
+    for (let j = 0; j <= m; j++) d[0][j] = j;
+    for (let i = 1; i <= n; i++) {
+      for (let j = 1; j <= m; j++) {
+        const c = exp[i - 1] === got[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+      }
+    }
+    const ops = [];
+    let i = n, j = m;
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && d[i][j] === d[i - 1][j - 1] + (exp[i - 1] === got[j - 1] ? 0 : 1)) {
+        ops.push({ tipo: exp[i - 1] === got[j - 1] ? 'ok' : 'troca', e: i - 1, g: j - 1 });
+        i--; j--;
+      } else if (i > 0 && d[i][j] === d[i - 1][j] + 1) {
+        ops.push({ tipo: 'faltou', e: i - 1 });
+        i--;
+      } else {
+        ops.push({ tipo: 'sobrou', g: j - 1 });
+        j--;
+      }
+    }
+    return { dist: d[n][m], ops: ops.reverse() };
+  }
+
+  function corrigir(esperado, resposta) {
+    const expW = palavrasOrig(esperado);
+    const gotW = palavrasOrig(resposta);
+    const expK = expW.map(chave);
+    const gotK = gotW.map(chave);
+    const { dist, ops } = alinhar(expK, gotK);
+    const acerto = gotW.length === 0 ? 0 : Math.max(0, 1 - dist / Math.max(1, expK.length));
+    const palavrasErradas = [];
+    const acentos = [];
+    for (const op of ops) {
+      if (op.tipo === 'ok' && expW[op.e].toLowerCase() !== gotW[op.g].toLowerCase()) {
+        op.tipo = 'acento';
+        acentos.push(expW[op.e].toLowerCase());
+      }
+      if (op.tipo === 'troca' || op.tipo === 'faltou') palavrasErradas.push(expW[op.e].toLowerCase());
+    }
+    const resultado = gotW.length > 0 && dist === 0 ? 'certo' : acerto >= 0.75 ? 'quase' : 'errado';
+    return { acerto: Math.round(acerto * 100) / 100, resultado, ops, expW, gotW, palavrasErradas, acentos };
+  }
+
+  // ---------- Estado ----------
+  const state = {
+    db: null,
+    sample: null,
+    pronto: false,
+    perfil: { nivel: 'A2', novasPorSessao: 10, vozES: '', vozPT: '' },
+    frases: new Map(),
+    progresso: new Map(),
+    fila: [],
+    idx: 0,
+    extra: false,
+    sessaoId: '',
+    vistas: new Set(),
+    recolocadas: new Set(),
+    resumo: null,
+    card: null,
+    hoje: null,
+    aba: 'treinar'
+  };
+
+  // ---------- Gravação em fila ----------
+  const status = $('#saveStatus');
+  function mostrarStatus(txt, erro) {
+    status.textContent = txt;
+    status.classList.toggle('err', !!erro);
+  }
+  function msgErroDb(e) {
+    const c = e && e.code;
+    if (c === 'quota_exceeded') return 'O banco desta página está cheio. Peça ao Claude para arquivar registros antigos.';
+    if (c === 'invalid_argument') return 'Esta visualização não tem permissão para salvar. Abra a página com a sua conta.';
+    if (c === 'resource_exhausted') return 'Muitas gravações seguidas. Espere alguns segundos.';
+    if (c === 'revoked') return 'O acesso a esta página mudou. Recarregue a página.';
+    return 'Sem conexão com o banco. A próxima tentativa tenta de novo.';
+  }
+  let filaGravacao = Promise.resolve();
+  function gravar(rotulo, fn) {
+    filaGravacao = filaGravacao.then(async () => {
+      try {
+        await fn();
+      } catch (e) {
+        if (e && e.code === 'unavailable') {
+          await new Promise((r) => setTimeout(r, 600 + Math.random() * 900));
+          await fn();
+        } else {
+          throw e;
+        }
+      }
+      const t = new Date();
+      mostrarStatus(`${rotulo} às ${pad2(t.getHours())}:${pad2(t.getMinutes())}.`);
+    }).catch((e) => {
+      mostrarStatus(`Não salvou: ${msgErroDb(e)}`, true);
+    });
+    return filaGravacao;
+  }
+
+  function salvarPerfil() {
+    if (!state.db) return;
+    const dados = { ...state.perfil, atualizadoEm: Date.now() };
+    gravar('Ajustes salvos', () => state.db.doc('config/perfil').set(dados));
+  }
+
+  async function carregarHoje() {
+    const dia = diaLocal();
+    try {
+      const snap = await state.db.collection('tentativas').where('dia', '==', dia).get();
+      if (!snap.empty) {
+        const docs = snap.docs.slice().sort((a, b) => (a.id < b.id ? -1 : 1));
+        const ult = docs[docs.length - 1];
+        const d = ult.data() || {};
+        state.hoje = { id: ult.id, dia, itens: Array.isArray(d.itens) ? d.itens.slice() : [] };
+        return;
+      }
+    } catch { /* segue com documento novo */ }
+    state.hoje = { id: dia, dia, itens: [] };
+  }
+
+  function registrarTentativa(item) {
+    if (!state.db) return;
+    const dia = diaLocal();
+    if (!state.hoje || state.hoje.dia !== dia) state.hoje = { id: dia, dia, itens: [] };
+    state.hoje.itens.push(item);
+    let corpo = { dia, itens: state.hoje.itens, atualizadoEm: Date.now() };
+    if (JSON.stringify(corpo).length > LIMITE_DOC) {
+      const sufixo = String.fromCharCode(98 + Math.max(0, (state.hoje.id.split('-').length - 3)));
+      state.hoje = { id: `${dia}-${sufixo}`, dia, itens: [item] };
+      corpo = { dia, itens: state.hoje.itens, atualizadoEm: Date.now() };
+    }
+    const id = state.hoje.id;
+    const copia = JSON.parse(JSON.stringify(corpo));
+    gravar('Tentativa registrada', () => state.db.doc(`tentativas/${id}`).set(copia));
+  }
+
+  function salvarProgresso(prog) {
+    if (!state.db) return;
+    const copia = { ...prog };
+    gravar('Progresso salvo', () => state.db.doc(`progresso/${prog.fraseId}`).set(copia));
+  }
+
+  // ---------- Voz ----------
+  const voz = { suportada: 'speechSynthesis' in window, lista: [] };
+  function rankES(v) {
+    const l = v.lang.toLowerCase().replace('_', '-');
+    if (l === 'es-ar') return 0;
+    if (l === 'es-uy') return 1;
+    if (l === 'es-419' || l === 'es-us') return 2;
+    if (l === 'es-mx') return 3;
+    if (l.startsWith('es-') && l !== 'es-es') return 4;
+    if (l === 'es') return 5;
+    if (l === 'es-es') return 6;
+    return 99;
+  }
+  function rankPT(v) {
+    const l = v.lang.toLowerCase().replace('_', '-');
+    if (l === 'pt-br') return 0;
+    if (l.startsWith('pt')) return 1;
+    return 99;
+  }
+  function carregarVozes() {
+    if (!voz.suportada) return;
+    try { voz.lista = window.speechSynthesis.getVoices() || []; } catch { voz.lista = []; }
+  }
+  function escolherVoz(idioma) {
+    const pref = idioma === 'es' ? state.perfil.vozES : state.perfil.vozPT;
+    const rank = idioma === 'es' ? rankES : rankPT;
+    if (pref) {
+      const v = voz.lista.find((x) => x.name === pref);
+      if (v) return v;
+    }
+    const cands = voz.lista.filter((x) => rank(x) < 99).sort((a, b) => rank(a) - rank(b) || (b.localService === true) - (a.localService === true));
+    return cands[0] || null;
+  }
+  function falar(texto, idioma, lento) {
+    if (!voz.suportada) return;
+    try {
+      const s = window.speechSynthesis;
+      const ocupado = s.speaking || s.pending;
+      s.cancel();
+      const u = new SpeechSynthesisUtterance(texto);
+      const v = escolherVoz(idioma);
+      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = idioma === 'es' ? 'es-AR' : 'pt-BR'; }
+      u.rate = lento ? 0.7 : 0.95;
+      if (ocupado) setTimeout(() => s.speak(u), 80);
+      else s.speak(u);
+    } catch { /* sem áudio */ }
+  }
+  function notaVoz() {
+    if (!voz.suportada) return 'Este navegador não tem leitura em voz alta.';
+    const v = escolherVoz('es');
+    if (!v) return 'Nenhuma voz em espanhol encontrada neste aparelho. Instale o espanhol nas configurações de voz do sistema.';
+    const arg = v.lang.toLowerCase().replace('_', '-') === 'es-ar';
+    return `Voz: ${v.name} (${v.lang})${arg ? '' : '. Sem voz argentina neste aparelho; troque no Painel se houver outra.'}`;
+  }
+  if (voz.suportada) {
+    carregarVozes();
+    try { window.speechSynthesis.addEventListener('voiceschanged', () => { carregarVozes(); atualizarNotaVoz(); }); } catch { /* ok */ }
+  }
+  function atualizarNotaVoz() {
+    const n = $('#voiceNote');
+    if (n) n.textContent = notaVoz();
+  }
+
+  // ---------- Banner ----------
+  const banner = $('#banner');
+  function mostrarBanner(conteudo, tipo) {
+    banner.replaceChildren(...[].concat(conteudo));
+    banner.className = 'banner' + (tipo ? ' ' + tipo : '');
+    banner.hidden = false;
+  }
+  function esconderBanner() { banner.hidden = true; banner.replaceChildren(); }
+
+  // ---------- Níveis ----------
+  const levelBar = $('#levelBar');
+  function renderNiveis() {
+    levelBar.querySelectorAll('.line-badge').forEach((b) => b.remove());
+    for (const n of NIVEIS) {
+      levelBar.append(h('button', {
+        class: 'line-badge', 'data-n': n, 'aria-pressed': String(state.perfil.nivel === n),
+        'aria-label': `Nível ${n}`, title: NIVEL_DESC[n],
+        onclick: () => trocarNivel(n)
+      }, n));
+    }
+  }
+  async function trocarNivel(n) {
+    if (state.perfil.nivel === n && state.pronto) return;
+    state.perfil.nivel = n;
+    lsSet('habla.nivel', n);
+    renderNiveis();
+    salvarPerfil();
+    await carregarNivel();
+    if (state.aba === 'mais') renderMais();
+  }
+
+  // ---------- Carregamento ----------
+  async function carregarNivel() {
+    const n = state.perfil.nivel;
+    state.pronto = false;
+    renderCarregando();
+    esconderBanner();
+    if (!state.db) { renderSemDb(); return; }
+    try {
+      const [fs, ps] = await Promise.all([
+        state.db.collection('frases').where('nivel', '==', n).limit(1000).get(),
+        state.db.collection('progresso').where('nivel', '==', n).limit(1000).get()
+      ]);
+      if (state.perfil.nivel !== n) return;
+      state.frases = new Map();
+      for (const d of fs.docs) {
+        const x = d.data();
+        if (x && typeof x.es === 'string' && typeof x.pt === 'string') state.frases.set(d.id, { ...x, id: d.id });
+      }
+      state.progresso = new Map();
+      for (const d of ps.docs) {
+        const x = d.data();
+        if (x) state.progresso.set(d.id, { ...x, fraseId: d.id });
+      }
+    } catch (e) {
+      renderErroCarga(e);
+      return;
+    }
+    state.pronto = true;
+    sugerirSubida();
+    iniciarSessao(false);
+  }
+
+  function sugerirSubida() {
+    const n = state.perfil.nivel;
+    const i = NIVEIS.indexOf(n);
+    const total = state.frases.size;
+    if (i < 0 || i === NIVEIS.length - 1 || total < 20) return;
+    let dom = 0;
+    for (const id of state.frases.keys()) if ((state.progresso.get(id)?.caixa || 0) >= DOMINADA) dom++;
+    if (dom / total >= 0.8) {
+      const prox = NIVEIS[i + 1];
+      mostrarBanner([
+        h('p', null, `Você domina ${pct(dom / total)} das frases do ${n}. Já dá para subir para o ${prox}.`),
+        h('button', { class: 'btn primary', onclick: () => trocarNivel(prox) }, `Ir para o ${prox}`)
+      ]);
+    }
+  }
+
+  // ---------- Sessão ----------
+  function apoioPorCaixa(c) { return c <= 1 ? 'inteira' : c <= 3 ? 'iniciais' : 'nenhuma'; }
+  const PRIORIDADE_ORIGEM = { pedida: 0, gerada: 1 };
+  function ordemNovas(a, b) {
+    const pa = PRIORIDADE_ORIGEM[a.origem] ?? 2, pb = PRIORIDADE_ORIGEM[b.origem] ?? 2;
+    return pa - pb || ordemFrase(a, b);
+  }
+  function ordemFrase(a, b) {
+    const ca = a.criadaEm || 0, cb = b.criadaEm || 0;
+    if (ca !== cb) return ca - cb;
+    return a.id < b.id ? -1 : 1;
+  }
+
+  function iniciarSessao(extra) {
+    const agora = Date.now();
+    const vencidas = [];
+    const novas = [];
+    const vistas = [];
+    for (const f of state.frases.values()) {
+      const p = state.progresso.get(f.id);
+      if (!p) novas.push(f);
+      else {
+        vistas.push(f);
+        if ((p.proximaRevisao || 0) <= agora) vencidas.push(f);
+      }
+    }
+    vencidas.sort((a, b) => (state.progresso.get(a.id).proximaRevisao || 0) - (state.progresso.get(b.id).proximaRevisao || 0));
+    novas.sort(ordemNovas);
+    let fila = [];
+    if (extra) {
+      const pool = vistas.slice();
+      for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+      fila = pool.slice(0, 10).map((f) => f.id);
+    } else {
+      const v = vencidas.slice(0, 20).map((f) => f.id);
+      const nv = novas.slice(0, state.perfil.novasPorSessao || 10).map((f) => f.id);
+      while (v.length || nv.length) {
+        if (v.length) fila.push(v.shift());
+        if (v.length) fila.push(v.shift());
+        if (nv.length) fila.push(nv.shift());
+      }
+    }
+    state.fila = fila;
+    state.idx = 0;
+    state.extra = extra;
+    state.sessaoId = `s${agora.toString(36)}`;
+    state.vistas = new Set();
+    state.recolocadas = new Set();
+    state.resumo = { total: 0, certo: 0, quase: 0, errado: 0, palavras: new Map() };
+    if (state.frases.size === 0) { renderNivelVazio(); return; }
+    if (!fila.length) { renderEmDia(vistas.length); return; }
+    novoCartao(state.frases.get(fila[0]), 0);
+  }
+
+  function novoCartao(frase, repeticao) {
+    const prog = state.progresso.get(frase.id);
+    const caixa = prog ? prog.caixa || 0 : 0;
+    const apoio = apoioPorCaixa(caixa);
+    state.card = {
+      frase, caixa, novo: !prog, apoio, apoioInicial: apoio, pediuAjuda: false,
+      ouviuES: 0, ouviuPT: 0, inicio: Date.now(), teclas: 0, maiorInsercao: 0, colou: false,
+      conferido: false, repeticao
+    };
+    renderCartao();
+  }
+
+  function atualizarProgresso(f, resultado, pediuAjuda) {
+    const agora = Date.now();
+    const antes = state.progresso.get(f.id) || { fraseId: f.id, nivel: f.nivel, caixa: 0, acertos: 0, erros: 0, tentativas: 0 };
+    let caixa = antes.caixa || 0;
+    let dias = 1;
+    if (resultado === 'certo' && !pediuAjuda) {
+      caixa = Math.min(5, caixa + 1);
+      dias = INTERVALO_DIAS[caixa];
+    } else if (resultado === 'errado') {
+      caixa = 1;
+    } else {
+      caixa = Math.max(1, caixa);
+    }
+    const prog = {
+      fraseId: f.id,
+      nivel: f.nivel,
+      caixa,
+      proximaRevisao: inicioDoDia(agora) + dias * DIA_MS,
+      acertos: (antes.acertos || 0) + (resultado === 'certo' ? 1 : 0),
+      erros: (antes.erros || 0) + (resultado === 'errado' ? 1 : 0),
+      tentativas: (antes.tentativas || 0) + 1,
+      ultima: agora,
+      ultimoResultado: resultado
+    };
+    state.progresso.set(f.id, prog);
+    salvarProgresso(prog);
+    return { antes: antes.caixa || 0, depois: caixa };
+  }
+
+  function conferir() {
+    const c = state.card;
+    if (!c || c.conferido) return;
+    const ta = $('#answer');
+    const resposta = ta.value.trim();
+    if (!resposta) {
+      ta.placeholder = c.apoio === 'inteira' ? 'Escreva ou dite a frase antes de conferir.' : 'Escreva ou dite a frase antes de conferir. Se não souber, toque em Mostrar.';
+      try { ta.focus(); } catch { /* ok */ }
+      return;
+    }
+    const r = corrigir(c.frase.es, resposta);
+    c.conferido = true;
+    c.correcao = r;
+
+    const primeira = !state.vistas.has(c.frase.id);
+    state.vistas.add(c.frase.id);
+    let caixas = { antes: c.caixa, depois: c.caixa };
+    if (primeira && !state.extra) caixas = atualizarProgresso(c.frase, r.resultado, c.pediuAjuda);
+
+    if (primeira && r.resultado === 'errado' && !state.recolocadas.has(c.frase.id)) {
+      state.recolocadas.add(c.frase.id);
+      const pos = Math.min(state.idx + 4, state.fila.length);
+      state.fila.splice(pos, 0, c.frase.id);
+    }
+
+    const entrada = c.colou ? 'colado' : c.maiorInsercao >= 12 ? 'ditado provável' : 'teclado';
+    registrarTentativa({
+      hora: new Date().toISOString(),
+      sessao: state.sessaoId,
+      fraseId: c.frase.id,
+      es: c.frase.es,
+      nivel: c.frase.nivel,
+      modo: state.extra ? 'extra' : 'sessao',
+      primeiraNaSessao: primeira,
+      repeticao: c.repeticao,
+      apoio: c.apoio,
+      apoioSugerido: c.apoioInicial,
+      pediuAjuda: c.pediuAjuda,
+      entrada,
+      resposta,
+      acerto: r.acerto,
+      resultado: r.resultado,
+      palavrasErradas: r.palavrasErradas,
+      acentos: r.acentos,
+      ouviuES: c.ouviuES,
+      ouviuPT: c.ouviuPT,
+      duracaoMs: Date.now() - c.inicio,
+      caixaAntes: caixas.antes,
+      caixaDepois: caixas.depois
+    });
+
+    const s = state.resumo;
+    s.total++;
+    s[r.resultado]++;
+    for (const w of r.palavrasErradas) s.palavras.set(w, (s.palavras.get(w) || 0) + 1);
+
+    renderResultado();
+  }
+
+  function proxima() {
+    state.idx++;
+    if (state.idx >= state.fila.length) { renderFimSessao(); return; }
+    novoCartao(state.frases.get(state.fila[state.idx]), 0);
+  }
+  function repetir() {
+    const c = state.card;
+    novoCartao(c.frase, (c.repeticao || 0) + 1);
+    state.card.apoio = c.apoio;
+    state.card.apoioInicial = c.apoioInicial;
+    renderCartao();
+  }
+
+  // ---------- Render: Treinar ----------
+  const secTreinar = $('#tab-treinar');
+
+  function renderCarregando() {
+    secTreinar.replaceChildren(h('div', { class: 'card empty-state' },
+      h('div', { class: 'thinking' }, h('span', { class: 'dot-pulse' }), 'Carregando as frases do nível ' + state.perfil.nivel + '…')));
+  }
+  function renderSemDb() {
+    secTreinar.replaceChildren(h('div', { class: 'card empty-state' },
+      h('h2', null, 'Abra a página no claude.ai'),
+      h('p', null, 'As frases e o registro das suas tentativas ficam no banco de dados desta página, que só funciona quando ela é aberta pelo link do claude.ai com a sua conta.'),
+      h('p', null, 'Se você já está no claude.ai, recarregue a página.')));
+  }
+  function renderErroCarga(e) {
+    secTreinar.replaceChildren(h('div', { class: 'card empty-state' },
+      h('h2', null, 'Não consegui carregar as frases'),
+      h('p', null, msgErroDb(e)),
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => carregarNivel() }, 'Tentar de novo'))));
+  }
+  function renderNivelVazio() {
+    secTreinar.replaceChildren(h('div', { class: 'card empty-state' },
+      h('h2', null, `O nível ${state.perfil.nivel} ainda não tem frases`),
+      h('p', null, 'Gere frases novas com o Claude na aba Mais frases, ou escolha outro nível acima.'),
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => abrirAba('mais') }, 'Gerar frases'))));
+  }
+  function renderEmDia(qtdVistas) {
+    let prox = Infinity;
+    for (const p of state.progresso.values()) if (p.proximaRevisao) prox = Math.min(prox, p.proximaRevisao);
+    const quando = isFinite(prox) ? rotuloDia(diaLocal(new Date(prox))) : null;
+    secTreinar.replaceChildren(h('div', { class: 'card empty-state' },
+      h('h2', null, `Tudo em dia no ${state.perfil.nivel}`),
+      h('p', null, 'Você já viu todas as frases deste nível e nenhuma revisão venceu.' + (quando ? ` A próxima revisão é ${quando}.` : '')),
+      h('p', null, 'Treinar agora não muda as datas de revisão; as tentativas ficam registradas.'),
+      h('div', { class: 'row' },
+        qtdVistas ? h('button', { class: 'btn primary', onclick: () => iniciarSessao(true) }, 'Treinar 10 frases mesmo assim') : null,
+        h('button', { class: 'btn', onclick: () => abrirAba('mais') }, 'Gerar frases novas'))));
+  }
+
+  function textoGuia() {
+    const c = state.card;
+    const guide = $('#guide');
+    if (!guide) return;
+    const typedK = palavrasOrig($('#answer').value).map(chave);
+    if (c.apoio === 'nenhuma' && !c.conferido) {
+      guide.replaceChildren(h('span', { class: 'empty' }, 'Sem ajuda. Tente de memória ou toque em Mostrar.'));
+      return;
+    }
+    const tokens = c.frase.es.split(/\s+/).filter(Boolean);
+    let j = 0;
+    const kids = [];
+    tokens.forEach((tok, ti) => {
+      const subs = palavrasOrig(tok).map(chave);
+      const ini = j;
+      j += subs.length;
+      const done = subs.length === 0 || subs.every((k, q) => typedK[ini + q] === k);
+      const cur = !done && typedK.length >= ini && typedK.length <= j;
+      const cls = 'w' + (done ? ' done' : '') + (cur ? ' cur' : '');
+      let conteudo;
+      if (c.apoio === 'iniciais' && !done && !c.conferido) {
+        conteudo = [];
+        let primeiraLetra = true;
+        let mascara = '';
+        for (const ch of tok) {
+          const letra = /\p{L}|\p{N}/u.test(ch);
+          if (letra && primeiraLetra) { conteudo.push(ch); primeiraLetra = false; }
+          else if (letra) mascara += ch;
+          else {
+            if (mascara) { conteudo.push(h('span', { class: 'mask' }, mascara)); mascara = ''; }
+            conteudo.push(ch);
+          }
+        }
+        if (mascara) conteudo.push(h('span', { class: 'mask' }, mascara));
+      } else {
+        conteudo = [tok];
+      }
+      kids.push(h('span', { class: cls }, ...conteudo));
+      if (ti < tokens.length - 1) kids.push(' ');
+    });
+    guide.replaceChildren(...kids);
+  }
+
+  function setApoio(novo) {
+    const c = state.card;
+    if (!c || c.conferido) return;
+    if (APOIO_ORDEM[novo] < APOIO_ORDEM[c.apoioInicial]) c.pediuAjuda = true;
+    c.apoio = novo;
+    renderSeg();
+    textoGuia();
+    const bs = $('#btnShow');
+    if (bs) bs.hidden = c.apoio === 'inteira';
+  }
+  function renderSeg() {
+    const seg = $('#seg');
+    if (!seg) return;
+    seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.apoio === state.card.apoio)));
+  }
+
+  function renderCartao() {
+    const c = state.card;
+    const f = c.frase;
+    const total = state.fila.length;
+    const pos = Math.min(state.idx + 1, total);
+    const prog = state.progresso.get(f.id);
+    const chipEstado = state.extra ? h('span', { class: 'chip' }, 'Treino extra')
+      : c.novo ? h('span', { class: 'chip new' }, 'Nova')
+      : (prog?.caixa || 0) >= DOMINADA ? h('span', { class: 'chip master' }, `Dominada · caixa ${prog.caixa} de 5`)
+      : h('span', { class: 'chip' }, `Revisão · caixa ${prog?.caixa || 0} de 5`);
+
+    const ta = h('textarea', {
+      id: 'answer', lang: 'es-AR', rows: '2', autocomplete: 'off', autocapitalize: 'sentences',
+      spellcheck: 'false', enterkeyhint: 'done', 'aria-label': 'Sua resposta em espanhol',
+      placeholder: 'Escreva ou dite em espanhol'
+    });
+    ta.addEventListener('beforeinput', (e) => {
+      const card = state.card;
+      if (!card || card.conferido) return;
+      if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') card.colou = true;
+      const n = (e.data || '').length;
+      if (n > card.maiorInsercao) card.maiorInsercao = n;
+      card.teclas++;
+    });
+    ta.addEventListener('input', () => {
+      textoGuia();
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
+    ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+        e.preventDefault();
+        if (!state.card.conferido) conferir(); else proxima();
+      }
+    });
+
+    const seg = h('div', { class: 'seg', id: 'seg', role: 'radiogroup', 'aria-label': 'Ajuda no campo' },
+      APOIOS.map((a) => h('button', {
+        role: 'radio', 'data-apoio': a.id, 'aria-checked': String(c.apoio === a.id),
+        onclick: () => setApoio(a.id)
+      }, a.rot)));
+
+    const audio = h('div', { class: 'audio' },
+      h('button', { class: 'btn primary', id: 'btnES', onclick: () => { c.ouviuES++; falar(f.es, 'es', false); }, disabled: !voz.suportada },
+        h('span', { html: ICON.play }), 'Ouvir em espanhol'),
+      h('button', { class: 'btn', id: 'btnESlento', onclick: () => { c.ouviuES++; falar(f.es, 'es', true); }, disabled: !voz.suportada },
+        h('span', { html: ICON.slow }), 'Devagar'),
+      h('p', { class: 'voice-note', id: 'voiceNote' }, notaVoz()));
+
+    const card = h('article', { class: 'card', id: 'card' },
+      h('div', { class: 'card-progress', 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(((pos - 1) / Math.max(1, total)) * 100)}%` })),
+      h('div', { class: 'meta' },
+        h('span', { class: 'line-badge small', 'data-n': f.nivel, 'aria-hidden': 'true' }, f.nivel),
+        chipEstado,
+        f.tema ? h('span', { class: 'chip' }, f.tema) : null,
+        h('span', { class: 'count' }, `${pos} de ${total}`)),
+      h('div', null,
+        h('p', { class: 'label' }, 'Em português'),
+        h('div', { class: 'pt-row' },
+          h('p', { class: 'pt', lang: 'pt-BR' }, f.pt),
+          h('button', { class: 'icon-btn', 'aria-label': 'Ouvir em português', title: 'Ouvir em português', onclick: () => { c.ouviuPT++; falar(f.pt, 'pt', false); }, disabled: !voz.suportada },
+            h('span', { html: ICON.play }), 'PT'))),
+      audio,
+      h('div', null,
+        h('p', { class: 'label' }, 'Diga em espanhol'),
+        h('div', { class: 'field' },
+          h('div', { class: 'guide', id: 'guide', lang: 'es-AR' }),
+          ta,
+          h('div', { class: 'field-tools' },
+            seg,
+            h('p', { class: 'tip' }, 'Para falar, use o microfone do teclado do celular.')))),
+      h('div', { class: 'row end', id: 'actions' },
+        h('button', { class: 'btn quiet', id: 'btnShow', hidden: c.apoio === 'inteira', onclick: () => setApoio('inteira') }, 'Mostrar'),
+        h('button', { class: 'btn primary', id: 'btnCheck', onclick: conferir }, 'Conferir')),
+      h('div', { class: 'result', id: 'result', hidden: true }));
+
+    secTreinar.replaceChildren(card, h('p', { class: 'kbd' }, 'Enter confere. Enter de novo passa para a próxima frase.'));
+    textoGuia();
+    try { ta.focus({ preventScroll: true }); } catch { /* ok */ }
+  }
+
+  function renderResultado() {
+    const c = state.card;
+    const r = c.correcao;
+    const ta = $('#answer');
+    ta.readOnly = true;
+    $('#actions').hidden = true;
+    const cont = $('.meta .count');
+    if (cont) cont.textContent = `${Math.min(state.idx + 1, state.fila.length)} de ${state.fila.length}`;
+    const seg = $('#seg');
+    if (seg) seg.querySelectorAll('button').forEach((b) => { b.disabled = true; });
+    textoGuia();
+
+    const diff = h('p', { class: 'diff', lang: 'es-AR' });
+    for (const op of r.ops) {
+      if (op.tipo === 'ok') diff.append(h('span', { class: 'd-ok' }, r.expW[op.e]));
+      else if (op.tipo === 'acento') diff.append(h('span', { class: 'd-acento', title: `Você escreveu "${r.gotW[op.g]}"` }, r.expW[op.e]));
+      else if (op.tipo === 'troca') diff.append(h('span', { class: 'd-troca' }, h('del', null, r.gotW[op.g]), h('ins', null, r.expW[op.e])));
+      else if (op.tipo === 'faltou') diff.append(h('span', { class: 'd-falta', title: 'Faltou esta palavra' }, r.expW[op.e]));
+      else if (op.tipo === 'sobrou') diff.append(h('span', { class: 'd-sobra', title: 'Palavra a mais' }, h('del', null, r.gotW[op.g])));
+      diff.append(' ');
+    }
+    const titulo = { certo: 'Certo', quase: 'Quase', errado: 'Ainda não' }[r.resultado];
+    const prog = state.progresso.get(c.frase.id);
+    let sobreCaixa = '';
+    if (!state.extra && c.repeticao === 0 && prog && state.vistas.has(c.frase.id)) {
+      const proxDia = rotuloDia(diaLocal(new Date(prog.proximaRevisao)));
+      sobreCaixa = `Caixa ${prog.caixa} de 5. Próxima revisão: ${proxDia}.`;
+    }
+    const temAcento = r.ops.some((o) => o.tipo === 'acento');
+    const res = $('#result');
+    res.replaceChildren(
+      h('div', { class: 'verdict ' + r.resultado },
+        h('strong', null, titulo),
+        h('span', { class: 'pct' }, `${pct(r.acerto)} das palavras`),
+        sobreCaixa ? h('span', { class: 'muted' }, sobreCaixa) : null),
+      r.gotW.length ? diff : h('p', { class: 'muted' }, 'Sem resposta.'),
+      r.gotW.length ? h('div', { class: 'legend' },
+        h('span', null, h('i', { style: 'background:var(--ok-soft);border:1px solid var(--ok)' }), 'certa'),
+        temAcento ? h('span', null, h('i', { style: 'background:var(--warn-soft);border:1px solid var(--warn)' }), 'só o acento') : null,
+        h('span', null, h('i', { style: 'background:var(--err-soft);border:1px solid var(--err)' }), 'trocada ou a mais'),
+        h('span', null, h('i', { style: 'border:1.5px dashed var(--err)' }), 'faltou')) : null,
+      h('p', { class: 'correct', lang: 'es-AR' }, 'Frase: ', h('b', null, c.frase.es)),
+      c.frase.nota ? h('p', { class: 'nota' }, h('b', null, 'Nota'), c.frase.nota) : null,
+      h('div', { class: 'row end' },
+        h('button', { class: 'btn', onclick: () => { c.ouviuES++; falar(c.frase.es, 'es', false); }, disabled: !voz.suportada }, h('span', { html: ICON.play }), 'Ouvir'),
+        h('span', { class: 'spacer' }),
+        h('button', { class: 'btn', onclick: repetir }, 'Repetir'),
+        h('button', { class: 'btn primary', id: 'btnNext', onclick: proxima }, state.idx + 1 >= state.fila.length ? 'Concluir' : 'Próxima')));
+    res.hidden = false;
+    try { ta.focus({ preventScroll: true }); } catch { /* ok */ }
+    res.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  function renderFimSessao() {
+    const s = state.resumo;
+    const palavras = [...s.palavras.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
+    secTreinar.replaceChildren(h('div', { class: 'card empty-state' },
+      h('h2', null, 'Sessão concluída'),
+      h('div', { class: 'tiles' },
+        tile(s.total, 'tentativas'),
+        tile(s.certo, 'certas'),
+        tile(s.quase, 'quase'),
+        tile(s.errado, 'ainda não')),
+      palavras.length ? h('div', null,
+        h('p', { class: 'label' }, 'Palavras para rever'),
+        h('div', { class: 'chips', lang: 'es-AR' }, palavras.map(([w, n]) => h('button', { class: 'chip', onclick: () => falar(w, 'es', true), title: 'Ouvir' }, w, n > 1 ? h('b', null, `×${n}`) : null)))) : null,
+      h('p', null, 'Tudo ficou registrado. As frases que você errou voltam amanhã.'),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn primary', onclick: () => iniciarSessao(false) }, 'Nova sessão'),
+        h('button', { class: 'btn', onclick: () => abrirAba('painel') }, 'Ver painel'))));
+  }
+
+  function tile(num, cap) {
+    return h('div', { class: 'tile' }, h('div', { class: 'num' }, num), h('div', { class: 'cap' }, cap));
+  }
+
+  // ---------- Painel ----------
+  const secPainel = $('#tab-painel');
+  async function renderPainel() {
+    secPainel.replaceChildren(h('div', { class: 'thinking' }, h('span', { class: 'dot-pulse' }), 'Carregando o registro…'));
+    if (!state.db) {
+      secPainel.replaceChildren(h('div', { class: 'card empty-state' }, h('h2', null, 'Painel indisponível'), h('p', null, 'O painel lê o banco de dados da página, que só funciona no claude.ai.')));
+      return;
+    }
+    let tent, porNivel;
+    try {
+      const qs = [state.db.collection('tentativas').orderBy('dia', 'desc').limit(200).get()];
+      for (const n of NIVEIS) {
+        qs.push(state.db.collection('frases').where('nivel', '==', n).limit(1000).get());
+        qs.push(state.db.collection('progresso').where('nivel', '==', n).limit(1000).get());
+      }
+      const rs = await Promise.all(qs);
+      tent = rs[0];
+      porNivel = NIVEIS.map((n, i) => {
+        const fs = rs[1 + i * 2];
+        const ps = rs[2 + i * 2];
+        const ids = new Set(fs.docs.map((d) => d.id));
+        let dom = 0, rev = 0;
+        for (const d of ps.docs) {
+          if (!ids.has(d.id)) continue;
+          const c = (d.data() || {}).caixa || 0;
+          if (c >= DOMINADA) dom++; else rev++;
+        }
+        return { n, total: ids.size, dom, rev };
+      });
+    } catch (e) {
+      secPainel.replaceChildren(h('div', { class: 'card empty-state' }, h('h2', null, 'Não consegui ler o registro'), h('p', null, msgErroDb(e))));
+      return;
+    }
+
+    const itens = [];
+    const porDia = new Map();
+    for (const d of tent.docs) {
+      const x = d.data() || {};
+      const lista = Array.isArray(x.itens) ? x.itens : [];
+      const dia = x.dia || d.id.slice(0, 10);
+      const agg = porDia.get(dia) || { n: 0, soma: 0 };
+      for (const it of lista) { itens.push({ ...it, dia }); agg.n++; agg.soma += Number(it.acerto) || 0; }
+      porDia.set(dia, agg);
+    }
+    const hoje = diaLocal();
+    const limite7 = diaLocal(new Date(Date.now() - 6 * DIA_MS));
+    const limite30 = diaLocal(new Date(Date.now() - 29 * DIA_MS));
+    const ult7 = itens.filter((i) => i.dia >= limite7);
+    const acerto7 = ult7.length ? ult7.reduce((a, i) => a + (Number(i.acerto) || 0), 0) / ult7.length : null;
+    let seq = 0;
+    {
+      const d = new Date();
+      if (!porDia.has(hoje)) d.setDate(d.getDate() - 1);
+      while (porDia.has(diaLocal(d)) && porDia.get(diaLocal(d)).n > 0) { seq++; d.setDate(d.getDate() - 1); }
+    }
+    const domTotal = porNivel.reduce((a, x) => a + x.dom, 0);
+    const erros = new Map();
+    for (const it of itens) {
+      if (it.dia < limite30) continue;
+      for (const w of it.palavrasErradas || []) erros.set(w, (erros.get(w) || 0) + 1);
+    }
+    const topErros = [...erros.entries()].sort((a, b) => b[1] - a[1]).slice(0, 18);
+
+    const dias14 = [];
+    for (let k = 13; k >= 0; k--) {
+      const dia = diaLocal(new Date(Date.now() - k * DIA_MS));
+      const a = porDia.get(dia) || { n: 0, soma: 0 };
+      dias14.push({ dia, n: a.n, acerto: a.n ? a.soma / a.n : null });
+    }
+    const maxN = Math.max(1, ...dias14.map((x) => x.n));
+
+    const kids = [
+      h('div', { class: 'tiles' },
+        tile(itens.length, 'tentativas registradas'),
+        tile(acerto7 === null ? '–' : pct(acerto7), 'acerto médio, 7 dias'),
+        tile(seq, seq === 1 ? 'dia seguido' : 'dias seguidos'),
+        tile(domTotal, 'frases dominadas')),
+      h('h2', { class: 'sec' }, 'Por nível'),
+      h('div', { class: 'panel' },
+        h('div', { class: 'key' },
+          h('span', null, h('i', { style: 'background:var(--accent)' }), 'dominadas (caixa 4 ou 5)'),
+          h('span', null, h('i', { style: 'background:color-mix(in srgb, var(--accent) 35%, var(--line))' }), 'em revisão')),
+        h('div', { class: 'levels' }, porNivel.map((x) => {
+          const t = Math.max(1, x.total);
+          return h('div', { class: 'lvl-row' },
+            h('span', { class: 'line-badge small', 'data-n': x.n, 'aria-hidden': 'true' }, x.n),
+            h('div', { class: 'meter', role: 'img', 'aria-label': `${x.n}: ${x.dom} dominadas e ${x.rev} em revisão de ${x.total} frases`, title: `${x.dom} dominadas, ${x.rev} em revisão, ${x.total - x.dom - x.rev} nunca vistas` },
+              x.dom ? h('span', { class: 'm-dom', style: `width:${(x.dom / t) * 100}%` }) : null,
+              x.rev ? h('span', { class: 'm-rev', style: `width:${(x.rev / t) * 100}%` }) : null),
+            h('span', { class: 'txt' }, `${x.n}: ${x.dom} dominadas · ${x.rev} em revisão · ${x.total} frases`));
+        }))),
+      h('h2', { class: 'sec' }, 'Últimos 14 dias'),
+      h('div', { class: 'table-wrap' }, h('table', { class: 'days' },
+        h('thead', null, h('tr', null, h('th', null, 'Dia'), h('th', null, 'Tentativas'), h('th', { class: 'num' }, 'Qtd.'), h('th', { class: 'num' }, 'Acerto'))),
+        h('tbody', null, dias14.slice().reverse().map((x) => h('tr', { title: `${rotuloDia(x.dia)}: ${x.n} tentativas${x.acerto === null ? '' : ', ' + pct(x.acerto) + ' de acerto'}` },
+          h('td', null, x.dia === hoje ? 'hoje' : rotuloDia(x.dia)),
+          h('td', { class: 'bar' }, x.n ? h('div', { class: 'b', style: `width:${(x.n / maxN) * 100}%` }) : null),
+          h('td', { class: 'num' }, x.n),
+          h('td', { class: 'num' }, x.acerto === null ? '–' : pct(x.acerto))))))),
+      h('h2', { class: 'sec' }, 'Palavras que você mais erra'),
+      topErros.length
+        ? h('div', { class: 'panel' }, h('p', { class: 'muted' }, 'Últimos 30 dias. Toque numa palavra para ouvir.'),
+          h('div', { class: 'chips', lang: 'es-AR' }, topErros.map(([w, n]) => h('button', { class: 'chip', onclick: () => falar(w, 'es', true) }, w, h('b', null, `×${n}`)))))
+        : h('p', { class: 'muted' }, 'Nenhum erro registrado nos últimos 30 dias.'),
+      h('h2', { class: 'sec' }, 'Ajustes'),
+      renderAjustes()
+    ];
+    secPainel.replaceChildren(h('div', { style: 'display:flex;flex-direction:column;gap:14px' }, ...kids));
+  }
+
+  function renderAjustes() {
+    carregarVozes();
+    const vozesES = voz.lista.filter((v) => rankES(v) < 99).sort((a, b) => rankES(a) - rankES(b));
+    const vozesPT = voz.lista.filter((v) => rankPT(v) < 99).sort((a, b) => rankPT(a) - rankPT(b));
+    const selES = h('select', { id: 'selVozES' },
+      h('option', { value: '' }, 'Automática (prioriza es-AR)'),
+      vozesES.map((v) => h('option', { value: v.name, selected: state.perfil.vozES === v.name }, `${v.name} (${v.lang})`)));
+    selES.addEventListener('change', () => { state.perfil.vozES = selES.value; salvarPerfil(); falar('Che, ¿cómo andás? Todo bien.', 'es', false); });
+    const selPT = h('select', { id: 'selVozPT' },
+      h('option', { value: '' }, 'Automática (prioriza pt-BR)'),
+      vozesPT.map((v) => h('option', { value: v.name, selected: state.perfil.vozPT === v.name }, `${v.name} (${v.lang})`)));
+    selPT.addEventListener('change', () => { state.perfil.vozPT = selPT.value; salvarPerfil(); falar('Oi, tudo bem?', 'pt', false); });
+    const selN = h('select', { id: 'selNovas' }, [5, 10, 15, 20].map((n) => h('option', { value: n, selected: (state.perfil.novasPorSessao || 10) === n }, `${n} frases novas`)));
+    selN.addEventListener('change', () => { state.perfil.novasPorSessao = Number(selN.value); salvarPerfil(); });
+    return h('div', { class: 'panel' },
+      h('div', { class: 'row' },
+        h('div', { class: 'form-row' }, h('label', { for: 'selVozES' }, 'Voz em espanhol'), selES),
+        h('div', { class: 'form-row' }, h('label', { for: 'selVozPT' }, 'Voz em português'), selPT),
+        h('div', { class: 'form-row' }, h('label', { for: 'selNovas' }, 'Por sessão'), selN)),
+      h('p', { class: 'muted' }, voz.suportada
+        ? (vozesES.length ? `${vozesES.length} voz(es) em espanhol neste aparelho.` : 'Nenhuma voz em espanhol neste aparelho.')
+        : 'Este navegador não tem leitura em voz alta.'));
+  }
+
+  // ---------- Mais frases ----------
+  const secMais = $('#tab-mais');
+  let geracao = null;
+
+  function msgErroSample(e) {
+    const c = e && e.code;
+    if (c === 'not_granted' || c === 'sampling_disabled' || c === 'not_declared' || c === 'capability_disabled' || c === 'capability_removed') return 'O uso do Claude não foi autorizado nesta página.';
+    if (c === 'rate_limited') return 'Muitos pedidos ao Claude agora, ou o limite da sua conta foi atingido. Tente daqui a pouco.';
+    if (c === 'session_expired') return 'Sua sessão no claude.ai expirou. Entre de novo e tente outra vez.';
+    if (c === 'invalid_json') return 'A resposta veio num formato que não consegui ler. Tente de novo.';
+    if (c === 'refused' || c === 'empty_completion') return 'O Claude não respondeu a este pedido. Mude o tema ou a quantidade.';
+    if (c === 'cancelled') return 'Pedido interrompido.';
+    return 'Falha de conexão com o Claude. Tente de novo.';
+  }
+  const bloqueiaSample = (e) => ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'].includes(e && e.code);
+
+  function regrasRioplatense() {
+    return [
+      '- Espanhol rio-platense natural, como se fala em Buenos Aires: voseo (vos tenés, vos sos, vos querés; imperativo mirá, vení, decime), "ustedes" no plural (nunca vosotros).',
+      '- Vocabulário argentino quando couber (colectivo, subte, celular, auto, departamento, plata, laburo, campera, remera, heladera, mozo, birome, dale, che).',
+      '- Pretérito simples no lugar do composto ("hoy comí", não "hoy he comido").',
+      '- Ortografia correta, com acentos e sinais ¿ ¡.'
+    ].join('\n');
+  }
+
+  async function chamarClaude(input, opcoes) {
+    if (geracao) geracao.abort();
+    geracao = new AbortController();
+    try {
+      return await state.sample.json(input, { modelTier: 'default', cache: false, signal: geracao.signal, ...opcoes });
+    } finally {
+      geracao = null;
+    }
+  }
+
+  function validarFrase(x, nivel, temaPadrao) {
+    if (!x || typeof x !== 'object') return null;
+    const es = typeof x.es === 'string' ? x.es.trim() : '';
+    const pt = typeof x.pt === 'string' ? x.pt.trim() : '';
+    if (es.length < 2 || es.length > 240 || pt.length < 2 || pt.length > 240) return null;
+    const tema = typeof x.tema === 'string' && x.tema.trim() ? x.tema.trim().toLowerCase().slice(0, 30) : temaPadrao;
+    const nota = typeof x.nota === 'string' ? x.nota.trim().slice(0, 300) : '';
+    return { es, pt, tema, nota, nivel };
+  }
+
+  function chavesExistentes() {
+    return new Set([...state.frases.values()].map((f) => chave(semPont(f.es))));
+  }
+
+  async function adicionarFrases(lista, origem) {
+    const agora = Date.now();
+    const base = agora.toString(36);
+    const novas = lista.map((x, i) => ({ ...x, id: `${origem === 'pedida' ? 'p' : 'g'}${base}${i.toString(36)}`, origem, criadaEm: agora + i }));
+    for (const f of novas) {
+      const { id, ...corpo } = f;
+      state.frases.set(id, f);
+      gravar('Frase adicionada', () => state.db.doc(`frases/${id}`).set(corpo));
+    }
+    await filaGravacao;
+    return novas.length;
+  }
+
+  function renderMais() {
+    const nivel = state.perfil.nivel;
+    const kids = [];
+
+    if (!state.db) {
+      secMais.replaceChildren(h('div', { class: 'card empty-state' }, h('h2', null, 'Indisponível fora do claude.ai'), h('p', null, 'As frases ficam no banco de dados da página, que só funciona no claude.ai.')));
+      return;
+    }
+
+    if (!state.sample) {
+      kids.push(h('div', { class: 'banner warn' }, h('p', null, 'Gerar e traduzir frases precisa do Claude, que não está disponível nesta visualização. A lista de frases abaixo continua funcionando.')));
+    } else {
+      // Como se diz
+      const inp = h('input', { type: 'text', id: 'inpComo', lang: 'pt-BR', placeholder: 'Ex.: Preciso remarcar a audiência para a semana que vem', autocomplete: 'off' });
+      const out = h('div', { id: 'outComo' });
+      const btn = h('button', { class: 'btn primary', id: 'btnComo' }, 'Traduzir');
+      const enviar = async () => {
+        const pt = inp.value.trim();
+        if (pt.length < 2) { inp.focus(); return; }
+        btn.disabled = true;
+        out.replaceChildren(h('div', { class: 'thinking' }, h('span', { class: 'dot-pulse' }), 'O Claude está traduzindo…',
+          h('button', { class: 'btn quiet', onclick: () => geracao?.abort() }, h('span', { html: ICON.stop }), 'Parar')));
+        try {
+          const prompt = `Traduza a frase abaixo, escrita em português do Brasil, para o espanhol que um portenho usaria numa conversa.\n${regrasRioplatense()}\n\nFrase: """${pt}"""\n\nResponda só com um objeto JSON, sem texto fora dele:\n{"es": "frase em espanhol rio-platense", "nota": "uma frase curta em português sobre o que muda em relação ao português (palavra argentina, falso amigo, voseo ou regra gramatical), ou \\"\\" se não houver nada útil", "nivel": "A1, A2, B1, B2 ou C1, conforme a dificuldade", "tema": "um destes: ${TEMAS.join(', ')}"}`;
+          const r = await chamarClaude(prompt);
+          const nv = NIVEIS.includes(r && r.nivel) ? r.nivel : nivel;
+          const f = validarFrase({ ...r, pt }, nv, 'conversa');
+          if (!f) throw { code: 'invalid_json' };
+          const addBtn = h('button', { class: 'btn primary' }, `Adicionar ao treino (${f.nivel})`);
+          addBtn.addEventListener('click', async () => {
+            addBtn.disabled = true;
+            if (f.nivel !== state.perfil.nivel) {
+              const agora = Date.now();
+              const id = `p${agora.toString(36)}0`;
+              const corpo = { ...f, origem: 'pedida', criadaEm: agora };
+              await gravar('Frase adicionada', () => state.db.doc(`frases/${id}`).set(corpo));
+            } else {
+              await adicionarFrases([f], 'pedida');
+            }
+            addBtn.textContent = `Adicionada ao ${f.nivel}`;
+          });
+          out.replaceChildren(h('div', { class: 'panel' },
+            h('p', { class: 'pt', lang: 'es-AR', style: 'font-size:var(--step-1)' }, h('b', null, f.es)),
+            f.nota ? h('p', { class: 'nota' }, h('b', null, 'Nota'), f.nota) : null,
+            h('div', { class: 'row' },
+              h('button', { class: 'btn', onclick: () => falar(f.es, 'es', false), disabled: !voz.suportada }, h('span', { html: ICON.play }), 'Ouvir'),
+              h('button', { class: 'btn', onclick: () => falar(f.es, 'es', true), disabled: !voz.suportada }, h('span', { html: ICON.slow }), 'Devagar'),
+              h('span', { class: 'spacer' }),
+              addBtn)));
+        } catch (e) {
+          out.replaceChildren(h('p', { class: 'muted' }, msgErroSample(e)));
+          if (bloqueiaSample(e)) { state.sample = null; renderMais(); }
+        } finally {
+          btn.disabled = false;
+        }
+      };
+      btn.addEventListener('click', enviar);
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); enviar(); } });
+      kids.push(h('h2', { class: 'sec' }, 'Como se diz…?'),
+        h('div', { class: 'panel' },
+          h('p', { class: 'muted' }, 'Escreva em português algo que você quer conseguir dizer. O Claude traduz para o espanhol argentino e você pode pôr a frase no treino.'),
+          h('div', { class: 'row' }, h('div', { class: 'form-row', style: 'flex:1 1 260px' }, h('label', { for: 'inpComo' }, 'Frase em português'), inp), btn),
+          out));
+
+      // Gerar
+      const selTema = h('select', { id: 'selTema' }, h('option', { value: '' }, 'Qualquer tema'), TEMAS.map((t) => h('option', { value: t }, t)));
+      const selQtd = h('select', { id: 'selQtd' }, [5, 10, 15].map((n) => h('option', { value: n, selected: n === 10 }, `${n} frases`)));
+      const btnGerar = h('button', { class: 'btn primary', id: 'btnGerar' }, `Gerar para o ${nivel}`);
+      const outGen = h('div', { id: 'outGen' });
+      btnGerar.addEventListener('click', async () => {
+        btnGerar.disabled = true;
+        const tema = selTema.value;
+        const qtd = Number(selQtd.value);
+        outGen.replaceChildren(h('div', { class: 'thinking' }, h('span', { class: 'dot-pulse' }), 'O Claude está escrevendo as frases. Isso leva de 10 a 60 segundos.',
+          h('button', { class: 'btn quiet', onclick: () => geracao?.abort() }, h('span', { html: ICON.stop }), 'Parar')));
+        try {
+          const existentes = [...state.frases.values()].sort(ordemFrase).slice(-250).map((f) => f.es);
+          const errosTop = await palavrasMaisErradas(12);
+          const prompt = [
+            `Você escreve material de treino para um brasileiro adulto que já entende espanhol e quer ganhar vocabulário para FALAR o espanhol de Buenos Aires.`,
+            `Escreva ${qtd} frases novas de nível ${nivel} do QECR (${NIVEL_DESC[nivel]})${tema ? `, todas sobre o tema "${tema}"` : ', variando os temas'}.`,
+            regrasRioplatense(),
+            `- Frases úteis numa conversa real, de 4 a 14 palavras, cada uma com uma estrutura ou palavra que valha a pena aprender.`,
+            `- "pt": tradução natural para o português do Brasil.`,
+            `- "nota": uma frase curta em português sobre a gramática, a expressão argentina ou o falso amigo da frase; "" se não houver nada útil.`,
+            `- "tema": um destes: ${TEMAS.join(', ')}.`,
+            errosTop.length ? `- Sempre que for natural, use estas palavras que a pessoa vem errando: ${errosTop.join(', ')}.` : '',
+            existentes.length ? `- Não repita nem parafraseie de perto estas frases que a pessoa já tem:\n${existentes.map((s) => '  ' + s).join('\n')}` : '',
+            `Responda só com um array JSON, sem texto fora dele: [{"es": "...", "pt": "...", "tema": "...", "nota": "..."}]`
+          ].filter(Boolean).join('\n');
+          const r = await chamarClaude(prompt);
+          const ja = chavesExistentes();
+          const lista = (Array.isArray(r) ? r : []).map((x) => validarFrase(x, nivel, tema || 'conversa')).filter((x) => {
+            if (!x) return false;
+            const k = chave(semPont(x.es));
+            if (ja.has(k)) return false;
+            ja.add(k);
+            return true;
+          });
+          if (!lista.length) throw { code: 'invalid_json' };
+          renderGerados(outGen, lista, nivel);
+        } catch (e) {
+          outGen.replaceChildren(h('p', { class: 'muted' }, msgErroSample(e)));
+          if (bloqueiaSample(e)) { state.sample = null; renderMais(); }
+        } finally {
+          btnGerar.disabled = false;
+        }
+      });
+      kids.push(h('h2', { class: 'sec' }, 'Gerar frases novas'),
+        h('div', { class: 'panel' },
+          h('p', { class: 'muted' }, 'O Claude escreve frases do nível escolhido, evita as que você já tem e usa as palavras que você mais erra. Gasta o uso da sua conta claude.ai; no primeiro uso a página pede sua autorização.'),
+          h('div', { class: 'row' },
+            h('div', { class: 'form-row' }, h('label', { for: 'selTema' }, 'Tema'), selTema),
+            h('div', { class: 'form-row' }, h('label', { for: 'selQtd' }, 'Quantidade'), selQtd),
+            btnGerar),
+          outGen));
+    }
+
+    // Banco
+    const busca = h('input', { type: 'search', id: 'busca', placeholder: 'Buscar em espanhol ou português', autocomplete: 'off' });
+    const lista = h('ul', { class: 'bank' });
+    const pintar = () => {
+      const q = chave(busca.value.trim());
+      const fs = [...state.frases.values()].sort(ordemFrase).filter((f) => !q || chave(f.es).includes(q) || chave(f.pt).includes(q));
+      lista.replaceChildren(...fs.map((f) => {
+        const p = state.progresso.get(f.id);
+        const est = !p ? h('span', { class: 'chip new' }, 'nova') : p.caixa >= DOMINADA ? h('span', { class: 'chip master' }, 'dominada') : h('span', { class: 'chip' }, `caixa ${p.caixa}`);
+        return h('li', null,
+          h('p', { class: 'es', lang: 'es-AR' }, f.es),
+          h('div', { class: 'side' }, est, h('button', { class: 'icon-btn', 'aria-label': `Ouvir: ${f.es}`, onclick: () => falar(f.es, 'es', false), disabled: !voz.suportada }, h('span', { html: ICON.play }))),
+          h('p', { class: 'pt2', lang: 'pt-BR' }, f.pt));
+      }));
+      if (!fs.length) lista.replaceChildren(h('li', null, h('p', { class: 'muted' }, state.frases.size ? 'Nenhuma frase encontrada.' : 'Este nível ainda não tem frases.')));
+    };
+    busca.addEventListener('input', pintar);
+    pintar();
+    kids.push(h('h2', { class: 'sec' }, `Frases do ${nivel} (${state.frases.size})`),
+      h('div', { class: 'panel' }, busca, lista));
+
+    secMais.replaceChildren(h('div', { style: 'display:flex;flex-direction:column;gap:14px' }, ...kids));
+  }
+
+  function renderGerados(out, lista, nivel) {
+    const checks = [];
+    const ul = h('ul', { class: 'gen-list' }, lista.map((f, i) => {
+      const cb = h('input', { type: 'checkbox', checked: true, id: `gen-${i}`, 'aria-label': `Incluir: ${f.es}` });
+      checks.push(cb);
+      return h('li', null, cb,
+        h('label', { for: `gen-${i}` },
+          h('p', { class: 'es', lang: 'es-AR' }, f.es),
+          h('p', { class: 'pt2', lang: 'pt-BR' }, f.pt),
+          f.nota ? h('p', { class: 'nt' }, f.nota) : null),
+        h('button', { class: 'icon-btn', 'aria-label': `Ouvir: ${f.es}`, onclick: () => falar(f.es, 'es', false), disabled: !voz.suportada }, h('span', { html: ICON.play })));
+    }));
+    const btnAdd = h('button', { class: 'btn primary' }, 'Adicionar as marcadas');
+    btnAdd.addEventListener('click', async () => {
+      const escolhidas = lista.filter((_, i) => checks[i].checked);
+      if (!escolhidas.length) return;
+      btnAdd.disabled = true;
+      const n = await adicionarFrases(escolhidas, 'gerada');
+      out.replaceChildren(h('div', { class: 'banner' },
+        h('p', null, `${n} frase(s) adicionada(s) ao ${nivel}. Elas entram nas próximas sessões como frases novas.`),
+        h('button', { class: 'btn primary', onclick: () => { abrirAba('treinar'); iniciarSessao(false); } }, 'Treinar agora')));
+      renderBancoContagem();
+    });
+    out.replaceChildren(ul, h('div', { class: 'row end', style: 'margin-top:10px' }, btnAdd));
+  }
+  function renderBancoContagem() {
+    const titulo = [...secMais.querySelectorAll('h2.sec')].pop();
+    if (titulo) titulo.textContent = `Frases do ${state.perfil.nivel} (${state.frases.size})`;
+  }
+
+  async function palavrasMaisErradas(n) {
+    try {
+      const snap = await state.db.collection('tentativas').orderBy('dia', 'desc').limit(30).get();
+      const m = new Map();
+      for (const d of snap.docs) for (const it of (d.data() || {}).itens || []) for (const w of it.palavrasErradas || []) m.set(w, (m.get(w) || 0) + 1);
+      return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([w]) => w);
+    } catch { return []; }
+  }
+
+  // ---------- Abas ----------
+  function abrirAba(nome) {
+    state.aba = nome;
+    lsSet('habla.aba', nome);
+    document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === nome)));
+    $('#tab-treinar').hidden = nome !== 'treinar';
+    $('#tab-painel').hidden = nome !== 'painel';
+    $('#tab-mais').hidden = nome !== 'mais';
+    if (nome === 'painel') renderPainel();
+    if (nome === 'mais') renderMais();
+  }
+  document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => abrirAba(t.dataset.tab)));
+
+  // ---------- Início ----------
+  async function iniciar() {
+    const nivelLocal = lsGet('habla.nivel');
+    if (NIVEIS.includes(nivelLocal)) state.perfil.nivel = nivelLocal;
+    renderNiveis();
+    renderCarregando();
+    const cl = window.claude;
+    const usar = (nome) => (cl && typeof cl.use === 'function' ? cl.use(nome).catch(() => null) : Promise.resolve(null));
+    const [db, sample] = await Promise.all([usar('db'), usar('sample')]);
+    state.db = db;
+    state.sample = sample;
+    if (db) {
+      try {
+        const snap = await db.doc('config/perfil').get();
+        if (snap.exists) {
+          const d = snap.data() || {};
+          if (NIVEIS.includes(d.nivel)) state.perfil.nivel = d.nivel;
+          if (typeof d.novasPorSessao === 'number') state.perfil.novasPorSessao = d.novasPorSessao;
+          if (typeof d.vozES === 'string') state.perfil.vozES = d.vozES;
+          if (typeof d.vozPT === 'string') state.perfil.vozPT = d.vozPT;
+        }
+      } catch { /* usa padrões */ }
+      await carregarHoje();
+    }
+    renderNiveis();
+    await carregarNivel();
+    const aba = lsGet('habla.aba');
+    if (aba === 'painel' || aba === 'mais') abrirAba(aba);
+  }
+  iniciar();
+})();
+</script>
